@@ -5,6 +5,7 @@ import dz.elit.todo.model.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,6 +15,7 @@ import java.util.List;
 public interface IUtilisateurService {
 
     public Utilisateur chercher(Integer id);
+    public List<Utilisateur> chercher(Date date);
     public List<Utilisateur> chercherTous();
     public void creerUtilisateur(Utilisateur u);
     public void supprimerUtilisateur(Utilisateur u);
