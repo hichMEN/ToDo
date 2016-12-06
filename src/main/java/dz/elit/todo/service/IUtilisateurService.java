@@ -19,5 +19,6 @@ public interface IUtilisateurService {
     public List<Utilisateur> chercherTous();
     public void creerUtilisateur(Utilisateur u);
     public void supprimerUtilisateur(Utilisateur u);
+    public void supprimerUtilisateur(int id);
     public void modifierUtilisateur(Utilisateur u);
 }

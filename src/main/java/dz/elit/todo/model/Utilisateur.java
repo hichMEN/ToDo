@@ -40,12 +40,12 @@ public class Utilisateur  {
     @JsonProperty("login")
     private String login;
     @Column
-    @JsonFormat(
-            shape = JsonFormat.Shape.STRING,
-            pattern = "dd-MM-yyyy")
-    @JsonProperty("dateCreation")
-    @JsonSerialize(using = DateSerialized.class)
-    @JsonDeserialize(using = DateDessirealized.class)
+//    @JsonFormat(
+//            shape = JsonFormat.Shape.STRING,
+//            pattern = "dd-MM-yyyy")
+//    @JsonProperty("dateCreation")
+//    @JsonSerialize(using = DateSerialized.class)
+//    @JsonDeserialize(using = DateDessirealized.class)
     private Date dateCreation;
 
     @JsonIgnore

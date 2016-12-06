@@ -35,10 +35,30 @@ public class UtilisateurController {
     }
 
     @PostMapping(value = "/add", headers="Accept=application/json")
+    @ResponseBody
     private ResponseEntity ajouterUtilisateur(@RequestBody Utilisateur utilisateur){
+        System.out.println("call REST put ajouterUtilisateur "+ utilisateur.toString());
+        utilisateur.setDateCreation(new Date());
             utilisateurService.creerUtilisateur(utilisateur);
         return  new ResponseEntity(utilisateur, HttpStatus.OK);
     }
+
+    @PutMapping(value = "/update", headers ="Accept=application/json")
+    @ResponseBody
+    private ResponseEntity modifierUtilisateur(@RequestBody Utilisateur utilisateur){
+        System.out.println("call REST put modifierUtilisateur "+ utilisateur.toString());
+        utilisateurService.modifierUtilisateur(utilisateur);
+        return new ResponseEntity(utilisateur, HttpStatus.OK);
+    }
+
+    @DeleteMapping( "/delete/{id}")
+//    @ResponseBody
+    private void supprimerUtilisateur(@PathVariable(value = "id") int id){
+
+        utilisateurService.supprimerUtilisateur(id);
+//        return new ResponseEntity(utilisateur, HttpStatus.OK);
+    }
+
     @GetMapping(value="/testData/{dateCreation}", headers="Accept=application/json", produces = "application/json")
     private List<Utilisateur> chercherListUserAvantDate(@PathVariable(value = "dateCreation") @DateTimeFormat(pattern="dd-MM-yyyy") Date dateCreation){
         return utilisateurService.chercher(dateCreation);

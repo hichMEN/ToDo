@@ -5,6 +5,8 @@ import dz.elit.todo.model.Utilisateur;
 import dz.elit.todo.service.IUtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -29,11 +31,12 @@ public class UtilisateurServiceImp implements IUtilisateurService {
     }
 
     public void creerUtilisateur(Utilisateur u) {
-        if(utilisateurDao.exists(u.getId())){
+        if(utilisateurDao.findByCode(u.getCode()) != null ){
             System.out.println("user existe");
         }
         else {
-            utilisateurDao.save(u);
+
+            utilisateurDao.saveAndFlush(u);
         }
     }
 
@@ -46,13 +49,21 @@ public class UtilisateurServiceImp implements IUtilisateurService {
         }
     }
 
+    public void supprimerUtilisateur(int id) {
+
+            utilisateurDao.delete(id);
+
+    }
     public void modifierUtilisateur(Utilisateur u) {
-        if(utilisateurDao.exists(u.getId())){
-            System.out.println("user existe");
-        }
-        else {
-            utilisateurDao.saveAndFlush(u);
-        }
+        System.out.println("modifierUtilisateur "+u);
+
+        utilisateurDao.save(u);
+//        if(utilisateurDao.exists(u.getId())){
+//            System.out.println("user existe");
+//        }
+//        else {
+//
+//        }
     }
 
 
