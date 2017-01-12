@@ -5,8 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +54,8 @@ public class Utilisateur  {
 
     @JsonIgnore
     @Nullable
-   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+   @OneToMany( mappedBy = "user", fetch =  FetchType.EAGER)
+    @Cascade({CascadeType.ALL})
     private List<ToDoList> toDoLists;
 
     public int getId() {
