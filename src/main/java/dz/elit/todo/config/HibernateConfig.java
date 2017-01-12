@@ -8,15 +8,18 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaDialect;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
@@ -27,10 +30,14 @@ import java.util.Properties;
  * Created by mh.chebihi on 09/10/2016.
  */
 @Configuration
-@EnableJpaRepositories(basePackages = "dz.elit.todo.dao", entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "HibernateTransactionManager" )
+@EnableJpaRepositories(basePackages = "dz.elit.todo.dao", entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "PlatformTransactionManager" )
 @EnableTransactionManagement
 @ComponentScan(basePackages = "dz.elit.todo.config")
 @PropertySource(value = {"classpath:application.properties"})
+/**
+ * Configuration JPA Spring full java
+ * pas besoin d'EntityManager
+ */
 public class HibernateConfig {
 
     @Autowired
@@ -45,6 +52,10 @@ public class HibernateConfig {
         return sessionFactory;
     }
     @Bean(name = "entityManagerFactory")
+    /*
+    * Fabriquer l'entité manager
+    *Remplace le fichier EntityManager.xml
+     */
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(dataSource());
@@ -76,13 +87,13 @@ public class HibernateConfig {
        return properties;
     }
 
-    @Bean(name = "HibernateTransactionManager")
-    @Autowired
-    public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
-        HibernateTransactionManager txManager = new HibernateTransactionManager();
-        txManager.setSessionFactory(sessionFactory);
-        return txManager;
-    }
+//    @Bean(name = "HibernateTransactionManager")
+//    @Autowired
+//    public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
+//        HibernateTransactionManager txManager = new HibernateTransactionManager();
+//        txManager.setSessionFactory(sessionFactory);
+//        return txManager;
+//    }
 
     @Bean(name = "jpaVendorAdapter")
     public JpaVendorAdapter jpaVendorAdapter()
@@ -99,5 +110,18 @@ public class HibernateConfig {
     public JpaDialect JpaDialect(){
         return new HibernateJpaDialect();
 
+    }
+
+    @Bean(name = "PlatformTransactionManager")
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf){
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(emf);
+
+        return transactionManager;
+    }
+
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+        return new PersistenceExceptionTranslationPostProcessor();
     }
 }
